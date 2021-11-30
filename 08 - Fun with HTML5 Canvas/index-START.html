@@ -1,19 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>HTML5 Canvas</title>
-</head>
-<body>
-<canvas id="draw" width="800" height="800"></canvas>
-<script>
-</script>
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML5 Canvas</title>
+  </head>
+  <body>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script>
+      const canvas = document.querySelector("#draw");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-<style>
-  html, body {
-    margin: 0;
-  }
-</style>
+      ctx.strokeStyle = "#BADA55"; // 선의 색깔
+      ctx.lineJoin = "round"; // 선의 끝부분 스타일 (butt, round, square)
+      ctx.lineCap = "round"; // 선이 꺾이는 부분의 모양 (bevel, round, miter)
+      ctx.lineWidth = 100;
 
-</body>
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+      let hue = 0;
+      let direction = true;
+
+      function draw(e) {
+        if (!isDrawing) return; // 마우스 클릭 안하면, 함수 종료
+        //console.log(e);
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+
+        // 선 그리기 시작
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY); // 시작 위치
+        ctx.lineTo(e.offsetX, e.offsetY); // 끝나는 위치
+        ctx.stroke(); // 경로 그리기
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+
+        // 색조 변경
+        hue++;
+        if (hue >= 360) {
+          hue = 0;
+        }
+
+        // 두께 변경
+        if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+          direction = !direction;
+        }
+        if (direction) {
+          ctx.lineWidth++;
+        } else {
+          ctx.lineWidth--;
+        }
+      }
+
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      });
+      canvas.addEventListener("mouseup", () => (isDrawing = false));
+      canvas.addEventListener("mouseout", () => (isDrawing = false));
+    </script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+    </style>
+  </body>
 </html>
