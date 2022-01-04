@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Key Detection</title>
-  <script type="text/javascript" src="https://www.cornify.com/js/cornify.js"></script>
-</head>
-<body>
-<script>
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Key Detection</title>
+    <script
+      type="text/javascript"
+      src="https://www.cornify.com/js/cornify.js"
+    ></script>
+  </head>
+  <body>
+    <script>
+      const pressed = [];
+      const easyway = [];
+      const secretCode = "wesbos";
+
+      window.addEventListener("keyup", (e) => {
+        // 1. keyup 이벤트 대상인 key를 배열에 넣는다
+        pressed.push(e.key);
+        easyway.push(e.key);
+        //console.log("pressed: ", pressed);
+        console.log("easyway: ", easyway);
+
+        // 2. 입력된 배열을 뒤에서부터 secretCode 글자수만큼만 남긴다
+        pressed.splice(
+          -secretCode.length - 1,
+          pressed.length - secretCode.length
+        );
+        easyway.splice(0, easyway.length - secretCode.length);
+
+        //console.log("처리후 pressed: ", pressed);
+        console.log("처리후 easyway: ", easyway);
+
+        // 3. secretCode가 입력되면, 유니콘/무지개 나타난다
+        if (easyway.join("").includes(secretCode)) {
+          console.log("DING DING!");
+          cornify_add();
+        }
+      });
+    </script>
+  </body>
 </html>
